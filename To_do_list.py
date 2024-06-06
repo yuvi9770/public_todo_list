@@ -1,30 +1,27 @@
 import streamlit as st
 
-# Define an empty list to store tasks
-tasks = []
+# Initialize session state if not already done
+if 'tasks' not in st.session_state:
+    st.session_state['tasks'] = []
 
 # Function to add a task
 def add_task():
     task = st.session_state["new_task"]
     if task:
-        tasks.append({"task": task, "completed": False})
+        st.session_state['tasks'].append({"task": task, "completed": False})
         st.session_state["new_task"] = ""
-        st.experimental_rerun()
 
 # Function to remove a task
 def remove_task(task_index):
-    tasks.pop(task_index)
-    st.experimental_rerun()
+    st.session_state['tasks'].pop(task_index)
 
 # Function to mark a task as complete
 def mark_as_complete(task_index):
-    tasks[task_index]["completed"] = True
-    st.experimental_rerun()
+    st.session_state['tasks'][task_index]["completed"] = True
 
 # Function to clear all tasks
 def clear_tasks():
-    tasks.clear()
-    st.experimental_rerun()
+    st.session_state['tasks'].clear()
 
 st.title("To-Do List")
 
@@ -33,8 +30,8 @@ st.text_input("Enter a task", key="new_task")
 st.button("Add Task", on_click=add_task)
 
 # Display the tasks
-if tasks:
-    for i, task in enumerate(tasks):
+if st.session_state['tasks']:
+    for i, task in enumerate(st.session_state['tasks']):
         task_text = task["task"]
         if task["completed"]:
             task_text += " ✔"
